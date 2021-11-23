@@ -5,7 +5,7 @@ class SpaceWars extends Phaser.Scene {
     //GAME ASSETS
     this.load.image("playerShip", "../assets/ships/rebelShip.svg");
     this.load.image("enemyShip", "../assets/ships/PodShip.svg");
-    this.load.image("background", "../assets/background/5430309.jpg");
+    this.load.image("background", "../assets/background/bg.jpeg");
   }
 
   create() {
