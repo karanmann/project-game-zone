@@ -2,18 +2,20 @@ import SpaceWars from "./SpaceWars.js";
 
 var config = {
   type: Phaser.AUTO,
-  // width: 800,
-  // height: 600,
-  width: window.innerWidth,
-  height: window.innerHeight,
-  scene: [SpaceWars],
+  width: 800,
+  height: 600,
+  // width: window.innerWidth,
+  // height: window.innerHeight,
   physics: {
     default: "arcade",
     arcade: {
-      gravity: false,
+      gravity: { y: 200},
+      enableBody: true,
       debug: true,
     },
   },
+  backgroundColor: "#fff",
+  scene: [SpaceWars],
 };
 
 new Phaser.Game(config);
