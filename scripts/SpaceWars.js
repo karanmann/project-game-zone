@@ -1,11 +1,15 @@
-let center, bg, playerShip, enemyShip, playerShipControls, startGame, text
+let center, bg, playerShip, enemyShip, playerShipControls, startGame, text, cosmicSound, cruisingSound;
 
 class SpaceWars extends Phaser.Scene {
   preload() {
     //GAME ASSETS
+    
     this.load.image("playerShip", "../assets/ships/rebelShip.svg");
     this.load.image("enemyShip", "../assets/ships/PodShip.svg");
     this.load.image("background", "../assets/background/5430309.jpg");
+    this.load.audio("cosmic", "./assets/audio/cosmicGlow.mp3");
+    this.load.audio("cruising", "./assets/audio/shipCruising.mp3");
+
   }
 
   create() {
@@ -35,34 +39,50 @@ class SpaceWars extends Phaser.Scene {
     enemyShip.setScale(0.2);
     enemyShip.setFlipY(true) //To flip the image on its Y-axis. It can also be used on the X-axis
 
+
     text = this.add.text(center.x + 200, 10, "SCORE : XXX", {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
       fontSize: 20,
     });
 
     text.setOrigin(0.5, 0);
+
+    cosmicSound = this.sound.add('cosmic', { volume: 0.2 });
+    cruisingSound = this.sound.add('cruising', { volume: 0.2 });
+  
   }
 
   update() {
 
     if (playerShipControls.space.isDown) {
       startGame = true;
+      cosmicSound.play();
+       //Background music starts playing
     }//Player starts game by pressing space
 
     if(startGame) {
       if (playerShipControls.left.isDown) {
         playerShip.setVelocity(-200, 0); //Left arrow is pressed
+        cruisingSound.play();
+      
+        
       }
+
       if (playerShipControls.right.isDown) {
         playerShip.setVelocity(200, 0);//Right arrow is pressed
+        cruisingSound.play();
       }
-      // if (playerShipControls.up.isDown) {
-      //   playerShip.setVelocity(0, -200);
-      // }
-      // if (playerShipControls.down.isDown) {
-      //   playerShip.setVelocity(0, 200);
-      // }
+      if (playerShipControls.up.isDown) {
+        playerShip.setVelocity(0, -200);
+        cruisingSound.play();
+      }
+      if (playerShipControls.down.isDown) {
+        playerShip.setVelocity(0, 200);
+        cruisingSound.play();
+      }
+
     }
+    
   }
 }
 
