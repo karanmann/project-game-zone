@@ -6,15 +6,15 @@ let center,
   startGame,
   text,
   platform,
-  cosmicSound, 
-  cruisingSound
+  cosmicSound,
+  cruisingSound;
 
 const gameState = { score: 0 };
 
 class SpaceWars extends Phaser.Scene {
   preload() {
     //GAME ASSETS
-    
+
     this.load.image("playerShip", "../assets/ships/rebelShip.svg");
     this.load.image("enemyShip", "../assets/ships/PodShip.svg");
     this.load.image("background", "../assets/startPage/bg.jpeg");
@@ -56,31 +56,32 @@ class SpaceWars extends Phaser.Scene {
       loop: true,
     });
 
-
     this.physics.add.collider(fallingEnemies, platform, function (singleEnemy) {
       singleEnemy.destroy();
       gameState.score += 1;
-      gameState.scoreText.setText(`ENEMIES MISSED: ${gameState.score}`)
+      gameState.scoreText.setText(`ENEMIES MISSED: ${gameState.score}`);
     });
 
-    gameState.scoreText = this.add.text(300, 560, "ENEMIES MISSED : 0", {
+    gameState.scoreText = this.add.text(300, 560, "ENEMIES MISSED : 0", {});
+    cosmicSound = this.sound.add("cosmic", { volume: 0.2 });
+    cruisingSound = this.sound.add("cruising", { volume: 0.2 });
   }
 
   update() {
-    cosmicSound.play();
-      
-    if (playerShipControls.left.isDown) {
+    if (playerShipControls.space.isDown){
+      cosmicSound.play();
+    } else if (playerShipControls.left.isDown) {
       playerShip.setVelocity(-400, 0); //Left arrow is pressed
       cruisingSound.play();
     } else if (playerShipControls.right.isDown) {
       playerShip.setVelocity(400, 0);
-      cruisingSound.play();//Right arrow is pressed
+      cruisingSound.play(); //Right arrow is pressed
     } else if (playerShipControls.up.isDown) {
       playerShip.setVelocity(0, -400);
-      cruisingSound.play();// Up arrow is pressed
+      cruisingSound.play(); // Up arrow is pressed
     } else if (playerShipControls.down.isDown) {
       playerShip.setVelocity(0, 400);
-      cruisingSound.play();// Down arrow is pressed
+      cruisingSound.play(); // Down arrow is pressed
     } else {
       playerShip.setVelocity(0, 0); // if nothing is pressed velocity on x & y-axis to 0
     }
