@@ -3,13 +3,15 @@ let center, bg, playerShip, enemyShip, playerShipControls, startGame, text, cosm
 class SpaceWars extends Phaser.Scene {
   preload() {
     //GAME ASSETS
-    this.load.image("playerShip", "../assets/ships/6B.png");
-    this.load.image("enemyShip", "../assets/ships/8B.png");
-    this.load.image("background", "../assets/background/space.jpg");
+    
+    this.load.image("playerShip", "../assets/ships/rebelShip.svg");
+    this.load.image("enemyShip", "../assets/ships/PodShip.svg");
+    this.load.image("background", "../assets/background/5430309.jpg");
     this.load.audio("cosmic", "./assets/audio/cosmicGlow.mp3");
     this.load.audio("cruising", "./assets/audio/shipCruising.mp3");
-    
+
   }
+
   create() {
     center = {
       x: this.physics.world.bounds.width / 2,
@@ -25,7 +27,7 @@ class SpaceWars extends Phaser.Scene {
       "playerShip"
     );
 
-    playerShip.setScale(0.7);
+    playerShip.setScale(0.3);
     playerShip.setCollideWorldBounds(true); //Stops playerShip from leaving the frame.
     playerShipControls = this.input.keyboard.createCursorKeys() //Gives us access to Arrowkeys + Space + Shift
 
@@ -34,12 +36,13 @@ class SpaceWars extends Phaser.Scene {
       window.innerHeight / 5,
       "enemyShip"
     );
-    enemyShip.setScale(0.4);
+    enemyShip.setScale(0.2);
     enemyShip.setFlipY(true) //To flip the image on its Y-axis. It can also be used on the X-axis
 
-    text = this.add.text(center.x, 10, "SPACEWARS", {
+
+    text = this.add.text(center.x + 200, 10, "SCORE : XXX", {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
-      fontSize: 30
+      fontSize: 20,
     });
 
     text.setOrigin(0.5, 0);
@@ -48,7 +51,6 @@ class SpaceWars extends Phaser.Scene {
     cruisingSound = this.sound.add('cruising', { volume: 0.2 });
   
   }
-
 
   update() {
 
@@ -78,6 +80,7 @@ class SpaceWars extends Phaser.Scene {
         playerShip.setVelocity(0, 200);
         cruisingSound.play();
       }
+
     }
     
   }
