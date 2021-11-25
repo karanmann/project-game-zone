@@ -14,6 +14,7 @@ var config = {
       debug: true,
     },
   },
+  backgroundColor: "#fff",
   scene: [SpaceWars],
 };
 
