@@ -5,17 +5,22 @@ let center,
   playerShipControls,
   startGame,
   text,
-  platform;
+  platform,
+  cosmicSound, 
+  cruisingSound
 
 const gameState = { score: 0 };
 
 class SpaceWars extends Phaser.Scene {
   preload() {
     //GAME ASSETS
+    
     this.load.image("playerShip", "../assets/ships/rebelShip.svg");
     this.load.image("enemyShip", "../assets/ships/PodShip.svg");
     this.load.image("background", "../assets/startPage/bg.jpeg");
     this.load.image("bottom", "../assets/background/blackRectangle.svg");
+    this.load.audio("cosmic", "./assets/audio/cosmicGlow.mp3");
+    this.load.audio("cruising", "./assets/audio/shipCruising.mp3");
   }
 
   create() {
@@ -51,6 +56,7 @@ class SpaceWars extends Phaser.Scene {
       loop: true,
     });
 
+
     this.physics.add.collider(fallingEnemies, platform, function (singleEnemy) {
       singleEnemy.destroy();
       gameState.score += 1;
@@ -58,21 +64,23 @@ class SpaceWars extends Phaser.Scene {
     });
 
     gameState.scoreText = this.add.text(300, 560, "ENEMIES MISSED : 0", {
-      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
-      fontSize: 20,
-    });
-
   }
 
   update() {
+    cosmicSound.play();
+      
     if (playerShipControls.left.isDown) {
       playerShip.setVelocity(-400, 0); //Left arrow is pressed
+      cruisingSound.play();
     } else if (playerShipControls.right.isDown) {
-      playerShip.setVelocity(400, 0); //Right arrow is pressed
+      playerShip.setVelocity(400, 0);
+      cruisingSound.play();//Right arrow is pressed
     } else if (playerShipControls.up.isDown) {
-      playerShip.setVelocity(0, -400); // Up arrow is pressed
+      playerShip.setVelocity(0, -400);
+      cruisingSound.play();// Up arrow is pressed
     } else if (playerShipControls.down.isDown) {
-      playerShip.setVelocity(0, 400); // Down arrow is pressed
+      playerShip.setVelocity(0, 400);
+      cruisingSound.play();// Down arrow is pressed
     } else {
       playerShip.setVelocity(0, 0); // if nothing is pressed velocity on x & y-axis to 0
     }
