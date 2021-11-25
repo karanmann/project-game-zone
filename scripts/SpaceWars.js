@@ -1,14 +1,17 @@
 let center, bg, playerShip, enemyShip, playerShipControls, startGame, text
 
+const gameState = {}
+
 class SpaceWars extends Phaser.Scene {
   preload() {
     //GAME ASSETS
     this.load.image("playerShip", "../assets/ships/rebelShip.svg");
     this.load.image("enemyShip", "../assets/ships/PodShip.svg");
-    this.load.image("background", "../assets/background/5430309.jpg");
+    this.load.image("background", "../assets/startPage/bg.jpeg");
   }
 
   create() {
+
     center = {
       x: this.physics.world.bounds.width / 2,
       y: this.physics.world.bounds.height / 2,
@@ -23,7 +26,7 @@ class SpaceWars extends Phaser.Scene {
       "playerShip"
     );
 
-    playerShip.setScale(0.3);
+    playerShip.setScale(0.4);
     playerShip.setCollideWorldBounds(true); //Stops playerShip from leaving the frame.
     playerShipControls = this.input.keyboard.createCursorKeys() //Gives us access to Arrowkeys + Space + Shift
 
@@ -31,9 +34,24 @@ class SpaceWars extends Phaser.Scene {
       window.innerWidth / 2,
       window.innerHeight / 5,
       "enemyShip"
-    );
-    enemyShip.setScale(0.2);
+    ); 
+
+    enemyShip.setScale(0.3);
     enemyShip.setFlipY(true) //To flip the image on its Y-axis. It can also be used on the X-axis
+
+    const fallingEnemies = this.physics.add.group();  // Creating a group to generate random ships in
+  
+    function enemyGen () {
+      const XCoord = Math.random() * 600; // Generates random enemyship on the X-axis
+      fallingEnemies.create(XCoord, 0, 'enemyShip').setScale(0.4);
+    }
+
+    this.time.addEvent({
+      delay : 900,
+      callback: enemyGen,  // using to call the function enemyGen()
+      callbackScope: this,
+      loop: true
+    });
 
     text = this.add.text(center.x + 200, 10, "SCORE : XXX", {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
@@ -45,23 +63,19 @@ class SpaceWars extends Phaser.Scene {
 
   update() {
 
-    if (playerShipControls.space.isDown) {
-      startGame = true;
-    }//Player starts game by pressing space
-
-    if(startGame) {
-      if (playerShipControls.left.isDown) {
-        playerShip.setVelocity(-200, 0); //Left arrow is pressed
-      }
-      if (playerShipControls.right.isDown) {
-        playerShip.setVelocity(200, 0);//Right arrow is pressed
-      }
-      if (playerShipControls.up.isDown) {
-        playerShip.setVelocity(0, -200);
-      }
-      if (playerShipControls.down.isDown) {
-        playerShip.setVelocity(0, 200);
-      }
+    if (playerShipControls.left.isDown) {
+      playerShip.setVelocity(-400, 0); //Left arrow is pressed
+    }
+    else if (playerShipControls.right.isDown) {
+      playerShip.setVelocity(400, 0);//Right arrow is pressed
+    }
+    else if (playerShipControls.up.isDown) {
+      playerShip.setVelocity(0, -400);
+    }
+    else if (playerShipControls.down.isDown) {
+      playerShip.setVelocity(0, 400);
+    } else {
+      playerShip.setVelocity(0, 0);
     }
   }
 }
