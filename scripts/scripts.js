@@ -11,10 +11,10 @@ var config = {
     arcade: {
       gravity: { y: 200},
       enableBody: true,
-      debug: true,
+      debug: false,
     },
   },
-  backgroundColor: "#fff",
+  backgroundColor: "#000",
   scene: [SpaceWars],
 };
 
