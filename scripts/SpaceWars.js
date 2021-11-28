@@ -3,28 +3,28 @@ let center,
   playerShip,
   enemyShip,
   playerShipControls,
-  startGame,
-  text,
   platform,
   cosmicSound,
   cruisingSound,
-  playerLaser,
-  enemyLaser,
-  bullets,
-  speed  ;
+  playerLaserSound,
+  enemyLaser;
 
 const gameState = { score: 0, lastFired: 0 };
 
 class SpaceWars extends Phaser.Scene {
   preload() {
-    //GAME ASSETS
 
+    //GAME ASSETS
     this.load.image("playerShip", "../assets/ships/rebelShip.svg");
     this.load.image("enemyShip", "../assets/ships/PodShip.svg");
     this.load.image("background", "../assets/startPage/bg.jpeg");
     this.load.image("bottom", "../assets/background/blackRectangle.svg");
     this.load.audio("cosmic", "../assets/audio/cosmicGlow.mp3");
-    this.load.audio("cruising", "../assets/audio/shipCruising.mp3"); 
+    this.load.audio("cruising", "../assets/audio/shipCruising.mp3");
+    this.load.audio(
+      "playerLaserAudio",
+      "../assets/audio/Laser Gun Sound Effect.mp3"
+    );
     this.load.image("playerLaser", "../assets/lasers/laserBlue01.png");
     this.load.image("enemyLaser", "../assets/lasers/laserRed03.png");
   }
@@ -41,7 +41,7 @@ class SpaceWars extends Phaser.Scene {
     playerShip.setCollideWorldBounds(true); //Stops playerShip from leaving the frame.
 
     playerShipControls = this.input.keyboard.createCursorKeys(); //Gives us access to Arrowkeys + Space + Shift
-  
+
     this.physics.add.collider(playerShip, platform);
 
     enemyShip = this.physics.add.sprite(700, 100, "enemyShip");
@@ -76,31 +76,35 @@ class SpaceWars extends Phaser.Scene {
       gameState.scoreText.setText(`ENEMIES MISSED: ${gameState.score}`);
     });
 
-    
-
     // gameState.hitScore = this.add.text(50, 560, "ENEMIES HIT : 0", {})
     gameState.scoreText = this.add.text(300, 560, "ENEMIES MISSED : 0", {});
+
+    //ALL SOUNDS
     cosmicSound = this.sound.add("cosmic", { volume: 0.2 });
     cruisingSound = this.sound.add("cruising", { volume: 0.2 });
+    playerLaserSound = this.sound.add("playerLaserAudio", { volume: 0.2 });
   }
 
   update() {
     if (Phaser.Input.Keyboard.JustDown(playerShipControls.space)) {
-      gameState.playerLaser.create(playerShip.x, playerShip.y, 'playerLaser').setGravityY(-900);
+      gameState.playerLaser
+        .create(playerShip.x, playerShip.y, "playerLaser")
+        .setGravityY(-900);
+      playerLaserSound.play();
     }
 
     if (playerShipControls.left.isDown) {
       playerShip.setVelocity(-400, 0); //Left arrow is pressed
-      cruisingSound.play();
+      // cruisingSound.play();
     } else if (playerShipControls.right.isDown) {
       playerShip.setVelocity(400, 0);
-      cruisingSound.play(); //Right arrow is pressed
+      // cruisingSound.play(); //Right arrow is pressed
     } else if (playerShipControls.up.isDown) {
       playerShip.setVelocity(0, -400);
-      cruisingSound.play(); // Up arrow is pressed
+      // cruisingSound.play(); // Up arrow is pressed
     } else if (playerShipControls.down.isDown) {
       playerShip.setVelocity(0, 400);
-      cruisingSound.play(); // Down arrow is pressed
+      // cruisingSound.play(); // Down arrow is pressed
     } else {
       playerShip.setVelocity(0, 0); // if nothing is pressed velocity on x & y-axis to 0
     }
