@@ -6,7 +6,8 @@ let bg,
   cosmicSound,
   cruisingSound,
   playerLaserSound,
-  enemyLaser;
+  enemyLaser,
+  fireFrequency = 0;
 
 const gameState = {
   score: 0,
@@ -31,7 +32,7 @@ class SpaceWars extends Phaser.Scene {
       "../assets/audio/Laser Gun Sound Effect.mp3"
     );
     this.load.image("playerLaser", "../assets/lasers/laserBlue01.png");
-    this.load.image("enemyLaser", "../assets/lasers/laserRed03.png");
+    this.load.image("enemyLaser", "../assets/lasers/laserRed01.png");
   }
 
   create() {
@@ -56,7 +57,7 @@ class SpaceWars extends Phaser.Scene {
     gameState.fallingEnemies = this.physics.add.group(); // Creating a group to generate random ships in
 
     function enemyGen() {
-      const XCoord = Math.random() * 550; // Generates random enemyship on the X-axis
+      const XCoord = Math.random() * 600; // Generates random enemyship on the X-axis
       gameState.fallingEnemies.create(XCoord, 0, "enemyShip").setScale(0.4);
     }
 
@@ -76,9 +77,9 @@ class SpaceWars extends Phaser.Scene {
         setTimeout(() => {
           laser.destroy();
           enemy.destroy();
-          gameState.hitScore.setText(`ENEMIES KILLED: ${gameState.hitScore}`)
           console.log(gameState.hitScore)
           gameState.hitScore += 1;
+          gameState.hitScoreText.setText(`ENEMIES KILLED: ${gameState.hitScore}`)
           },1)
       }
       
@@ -94,8 +95,8 @@ class SpaceWars extends Phaser.Scene {
       }
     );
 
-    gameState.hitScore = this.add.text(50, 560, "ENEMIES HIT : 0", {})
-    // gameState.scoreText = this.add.text(300, 560, "ENEMIES MISSED : 0", {});
+    gameState.hitScoreText = this.add.text(50, 560, "ENEMIES HIT : 0", {})
+    gameState.scoreText = this.add.text(300, 560, "ENEMIES MISSED : 0", {});
 
     //ALL SOUNDS
     cosmicSound = this.sound.add("cosmic", { volume: 0.2 });
@@ -103,11 +104,29 @@ class SpaceWars extends Phaser.Scene {
     playerLaserSound = this.sound.add("playerLaserAudio", { volume: 0.2 });
   }
 
+  randomFire(world) {
+    let arrayOfEnemies = gameState.fallingEnemies.getChildren()
+    let random = Math.floor(Math.random() * arrayOfEnemies.length);
+    let enemy = arrayOfEnemies[random]
+    if(enemy){
+      let position = enemy.body.center;
+      let shoot = this.physics.add.sprite(position.x, position.y,"enemyLaser" );
+      shoot.setVelocityY(300)
+    }
+  }
+
   update() {
+    console.log('fireFrequency', fireFrequency)
+    if(fireFrequency > 50){
+      fireFrequency = 0;
+      this.randomFire(this.physics)
+    }else{
+      fireFrequency++
+    }
     if (Phaser.Input.Keyboard.JustDown(playerShipControls.space)) {
       gameState.playerLaser
         .create(playerShip.x, playerShip.y, "playerLaser")
-        .setGravityY(-900);
+        .setGravityY(-1200);
       playerLaserSound.play();
     } else if (Phaser.Input.Keyboard.JustDown(playerShipControls.right)) {
       cruisingSound.play();
