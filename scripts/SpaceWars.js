@@ -38,6 +38,7 @@ class SpaceWars extends Phaser.Scene {
   create() {
     bg = this.add.image(400, 300, "background");
     bg.setDisplaySize(800, 600);
+    bg = this.add.tileSprite(500, 100, 1024,1024, "background")
 
     platform = this.physics.add.staticGroup();
     platform.create(0, 730, "bottom");
@@ -116,13 +117,16 @@ class SpaceWars extends Phaser.Scene {
   }
 
   update() {
-    console.log('fireFrequency', fireFrequency)
+    
+    bg.tilePositionY -= 1 // THE BACKGROUND IS ROLLING
+
     if(fireFrequency > 50){
       fireFrequency = 0;
       this.randomFire(this.physics)
     }else{
       fireFrequency++
     }
+
     if (Phaser.Input.Keyboard.JustDown(playerShipControls.space)) {
       gameState.playerLaser
         .create(playerShip.x, playerShip.y, "playerLaser")
