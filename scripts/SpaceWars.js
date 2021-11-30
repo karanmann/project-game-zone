@@ -25,7 +25,7 @@ const gameState = {
 class SpaceWars extends Phaser.Scene {
   preload() {
     //GAME ASSETS
-    this.load.image("playerShip", "../assets/ships/rebelShip.svg");
+    this.load.image("playerShip", "../assets/ships/ClipartKey_2127839.png");
     this.load.image("enemyShip", "../assets/ships/PodShip.svg");
     this.load.image("background", "../assets/startPage/bg.jpeg");
     this.load.image("bottom", "../assets/background/blackRectangle.svg");
@@ -75,7 +75,7 @@ class SpaceWars extends Phaser.Scene {
     platform.create(0, 730, "bottom");
 
     playerShip = this.physics.add.sprite(400, 490, "playerShip");
-    playerShip.setScale(0.4);
+    playerShip.setScale(0.13);
     playerShip.setCollideWorldBounds(true); //Stops playerShip from leaving the frame.
 
     playerShipControls = this.input.keyboard.createCursorKeys(); //Gives us access to Arrowkeys + Space + Shift
@@ -210,6 +210,7 @@ class SpaceWars extends Phaser.Scene {
       // cruisingSound.play(); // Down arrow is pressed
     } else if (Phaser.Input.Keyboard.JustDown(playerShipControls.shift)) {
       if (!gameState.playBackgroundSound) {
+        cosmicSound.loop = true
         cosmicSound.play();
         gameState.playBackgroundSound = true;
         // setTimeout(() => {gameState.playBackgroundSound = true}, 500)
