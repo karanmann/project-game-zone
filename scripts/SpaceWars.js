@@ -103,24 +103,20 @@ class SpaceWars extends Phaser.Scene {
     this.physics.add.collider(
       gameState.playerLaser,
       gameState.fallingEnemies,
-      function (playerLaser, fallingEnemy) {
-
-          
+      (playerLaser, fallingEnemy) => {
         console.log(fallingEnemy.x)
-          setX = fallingEnemy.x;
-          setY = fallingEnemy.y;
-          this.explosion = this.add.sprite(setX, setY, "explosion" )
-          this.explosion.play("boom");
-          this.explosion.on('animationcomplete', function(){this.destroy()});
-          console.log(fallingEnemy)
-          setTimeout(() => {
-          playerLaser.destroy();
-          fallingEnemy.destroy();
-          gameState.hitScore += 1;
-          gameState.hitScoreText.setText(`ENEMIES KILLED: ${gameState.hitScore}`)
-            
-          },1)
-          
+        setX = fallingEnemy.x;
+        setY = fallingEnemy.y;
+        this.explosion = this.add.sprite(setX, setY, "explosion" )
+        this.explosion.play("boom");
+        this.explosion.on('animationcomplete', function(){this.destroy()});
+        console.log(fallingEnemy)
+        setTimeout(() => {
+        playerLaser.destroy();
+        fallingEnemy.destroy();
+        gameState.hitScore += 1;
+        gameState.hitScoreText.setText(`ENEMIES KILLED: ${gameState.hitScore}`) 
+      },1)   
       }
     );
 
