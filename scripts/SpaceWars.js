@@ -4,10 +4,15 @@ let bg,
   playerShipControls,
   platform,
   cosmicSound,
-  cruisingSound,
+  playerShipSound,
   playerLaserSound,
   enemyLaser,
-  fireFrequency = 0;
+  frameNames,
+  fireFrequency = 0,
+  enemyShipSound,
+  enemyLaserSound,
+  playerExplode,
+  enemyExplode;
 
 const gameState = {
   score: 0,
@@ -20,19 +25,22 @@ const gameState = {
 class SpaceWars extends Phaser.Scene {
   preload() {
     //GAME ASSETS
-    this.load.image("playerShip", "../assets/ships/rebelShip.svg");
+    this.load.image("playerShip", "../assets/ships/ClipartKey_2127839.png");
     this.load.image("enemyShip", "../assets/ships/PodShip.svg");
     this.load.image("background", "../assets/startPage/bg.jpeg");
     this.load.image("bottom", "../assets/background/blackRectangle.svg");
-    this.load.audio("cosmic", "../assets/audio/cosmicGlow.mp3");
-    // this.load.audio("cruising", "../assets/audio/shipCruising.mp3");
-    this.load.audio("cruising", "../assets/audio/flying.mp3");
-    this.load.audio(
-      "playerLaserAudio",
-      "../assets/audio/Laser Gun Sound Effect.mp3"
-    );
     this.load.image("playerLaser", "../assets/lasers/laserBlue01.png");
     this.load.image("enemyLaser", "../assets/lasers/laserRed01.png");
+
+    this.load.audio("cosmic", "../assets/audio/Star Wars The Clone Wars - Star Wars Main Title & A Galaxy Divided (128 kbps).mp3");
+    this.load.audio("xwingFlyby", "../assets/audio/XWing flyby 1.mp3");
+    this.load.audio("tieFlyby", "../assets/audio/TIE fighter flyby 1.mp3");
+    this.load.audio("playerLaserAudio","../assets/audio/XWing fire (1).mp3");
+    this.load.audio("enemyLaserAudio","../assets/audio/TIE fighter fire 1 (1).mp3");
+    this.load.audio("playerExplode", "../assets/audio/XWing explode (1).mp3")
+    this.load.audio("enemyExplode", "../assets/audio/TIE fighter explode (1).mp3")
+
+    this.load.atlas("explosion", "../assets/ships/explosion-fast.png","../assets/ships/explosion-fast.json")
   }
 
   create() {
@@ -40,11 +48,34 @@ class SpaceWars extends Phaser.Scene {
     bg.setDisplaySize(800, 600);
     bg = this.add.tileSprite(500, 100, 1024,1024, "background")
 
+    frameNames = this.textures.get("explosion").getFrameNames();
+    this.anims.create({
+      key: "boom",
+      frames: [
+        {key: "explosion", frame: "Small Explosion Spriteheet-0.png"},
+        {key: "explosion", frame: "Small Explosion Spriteheet-1.png"},
+        {key: "explosion", frame: "Small Explosion Spriteheet-2.png"},
+        {key: "explosion", frame: "Small Explosion Spriteheet-3.png"},
+        {key: "explosion", frame: "Small Explosion Spriteheet-4.png"},
+        {key: "explosion", frame: "Small Explosion Spriteheet-5.png"},
+        {key: "explosion", frame: "Small Explosion Spriteheet-6.png"},
+        {key: "explosion", frame: "Small Explosion Spriteheet-7.png"},
+      ],
+      frameRate: 20,
+      repeat: 0
+    })
+
+
+    this.explosion = this.add.sprite(100, 100, "explosion" )
+    this.explosion.play("boom");
+    this.explosion.on('animationcomplete', function(){this.destroy()});
+
+    
     platform = this.physics.add.staticGroup();
     platform.create(0, 730, "bottom");
 
     playerShip = this.physics.add.sprite(400, 490, "playerShip");
-    playerShip.setScale(0.4);
+    playerShip.setScale(0.13);
     playerShip.setCollideWorldBounds(true); //Stops playerShip from leaving the frame.
 
     playerShipControls = this.input.keyboard.createCursorKeys(); //Gives us access to Arrowkeys + Space + Shift
@@ -74,17 +105,34 @@ class SpaceWars extends Phaser.Scene {
     this.physics.add.collider(
       gameState.playerLaser,
       gameState.fallingEnemies,
-      function (laser, enemy) {
+      (playerLaser, fallingEnemy) => {
+        this.explosion = this.add.sprite(fallingEnemy.x, fallingEnemy.y, "explosion" )
+        this.explosion.play("boom");
+        this.explosion.on('animationcomplete', function(){this.destroy()});
+        enemyExplode.play()
         setTimeout(() => {
-          laser.destroy();
-          enemy.destroy();
-          console.log(gameState.hitScore)
-          gameState.hitScore += 1;
-          gameState.hitScoreText.setText(`ENEMIES KILLED: ${gameState.hitScore}`)
-          },1)
+        playerLaser.destroy();
+        fallingEnemy.destroy();
+        gameState.hitScore += 1;
+        gameState.hitScoreText.setText(`ENEMIES KILLED: ${gameState.hitScore}`) 
+      },1)   
       }
-      
     );
+
+    // this.physics.add.collider(
+    //   gameState.playerLaser,
+    //   gameState.fallingEnemies,
+    //   function (playerLaser, fallingEnemy) {
+    //     setTimeout(() => {
+    //       playerLaser.destroy();
+    //       fallingEnemy.destroy();
+    //       gameState.hitScore += 1;
+    //       gameState.hitScoreText.setText(`ENEMIES KILLED: ${gameState.hitScore}`)
+            
+    //       },1)
+          
+    //   }
+    // );
 
     this.physics.add.collider(
       gameState.fallingEnemies,
@@ -98,11 +146,16 @@ class SpaceWars extends Phaser.Scene {
 
     gameState.hitScoreText = this.add.text(50, 560, "ENEMIES HIT : 0", {})
     gameState.scoreText = this.add.text(300, 560, "ENEMIES MISSED : 0", {});
-
+    
     //ALL SOUNDS
-    cosmicSound = this.sound.add("cosmic", { volume: 0.2 });
-    cruisingSound = this.sound.add("cruising", { volume: 0.1 });
-    playerLaserSound = this.sound.add("playerLaserAudio", { volume: 0.2 });
+    cosmicSound = this.sound.add("cosmic", { volume: 0.1 });
+    playerShipSound = this.sound.add("xwingFlyby", { volume: 0.1 });
+    playerLaserSound = this.sound.add("playerLaserAudio", { volume: 0.3 });
+    enemyShipSound = this.sound.add("tieFlyby", { volume: 0.3 })
+    enemyLaserSound = this.sound.add("enemyLaserAudio", { volume: 0.1 })
+    playerExplode = this.sound.add("playerExplode", { volume: 0.1 })
+    enemyExplode = this.sound.add("enemyExplode", { volume: 0.3 })
+
   }
 
   randomFire(world) {
@@ -111,13 +164,14 @@ class SpaceWars extends Phaser.Scene {
     let enemy = arrayOfEnemies[random]
     if(enemy){
       let position = enemy.body.center;
-      let shoot = this.physics.add.sprite(position.x, position.y,"enemyLaser" );
-      shoot.setVelocityY(300)
+      gameState.shoot = this.physics.add.sprite(position.x, position.y,"enemyLaser" );
+      gameState.shoot.setVelocityY(300)
+      enemyLaserSound.play()
     }
   }
 
   update() {
-    
+
     bg.tilePositionY -= 1 // THE BACKGROUND IS ROLLING
 
     if(fireFrequency > 50){
@@ -133,19 +187,18 @@ class SpaceWars extends Phaser.Scene {
         .setGravityY(-1200);
       playerLaserSound.play();
     } else if (Phaser.Input.Keyboard.JustDown(playerShipControls.right)) {
-      cruisingSound.play();
+      playerShipSound.play();
     } else if (Phaser.Input.Keyboard.JustDown(playerShipControls.left)) {
-      cruisingSound.play();
+      playerShipSound.play();
     } else if (Phaser.Input.Keyboard.JustDown(playerShipControls.up)) {
-      cruisingSound.play();
+      playerShipSound.play();
     } else if (Phaser.Input.Keyboard.JustDown(playerShipControls.down)) {
-      cruisingSound.play();
+      playerShipSound.play();
     }
 
 
     if (playerShipControls.left.isDown) {
       playerShip.setVelocity(-400, 0); //Left arrow is pressed
-      // cruisingSound.play();
     } else if (playerShipControls.right.isDown) {
       playerShip.setVelocity(400, 0);
       // cruisingSound.play(); //Right arrow is pressed
@@ -157,6 +210,7 @@ class SpaceWars extends Phaser.Scene {
       // cruisingSound.play(); // Down arrow is pressed
     } else if (Phaser.Input.Keyboard.JustDown(playerShipControls.shift)) {
       if (!gameState.playBackgroundSound) {
+        cosmicSound.loop = true
         cosmicSound.play();
         gameState.playBackgroundSound = true;
         // setTimeout(() => {gameState.playBackgroundSound = true}, 500)
