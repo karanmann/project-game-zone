@@ -168,3 +168,16 @@ img {
 * {
   cursor:url(/assets/ships/cursor.cur), auto;
 }
+
+/*High Score container*/
+
+.container{
+
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  height: 500px;
+  bottom: 8vh;
+  background-color: #fff;
+  
+}
+
