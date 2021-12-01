@@ -32,7 +32,7 @@ class SpaceWars extends Phaser.Scene {
     //GAME ASSETS
     this.load.image("playerShip", "../assets/ships/ClipartKey_2127839.png");
     this.load.image("enemyShip", "../assets/ships/PodShip.svg");
-    this.load.image("background", "../assets/startPage/bg.jpeg");
+    this.load.image("background", "../assets/background/bg_space_seamless_1.png");
     this.load.image("bottom", "../assets/background/blackRectangle.svg");
     this.load.image("playerLaser", "../assets/lasers/laserBlue01.png");
     this.load.image("enemyLaser", "../assets/lasers/laserRed01.png");
@@ -78,7 +78,7 @@ class SpaceWars extends Phaser.Scene {
     platform = this.physics.add.staticGroup();
     platform.create(0, 730, "bottom");
     
-    playerShip = this.physics.add.sprite(400, 490, "playerShip");
+    playerShip = this.physics.add.sprite(400, 450, "playerShip");
     playerShip.setScale(0.13);
     playerShip.setCollideWorldBounds(true); //Stops playerShip from leaving the frame.
 
