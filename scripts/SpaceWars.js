@@ -123,22 +123,22 @@ class SpaceWars extends Phaser.Scene {
 
     this.physics.add.collider(playerShip, platform);
 
-    this.physics.add.collider(
-      playerShip,
-      gameState.fallingEnemies,
-      (playerShip, fallingEnemy) => {
-        playerShip.destroy();
-        fallingEnemy.destroy();
-        this.explosion = this.add
-          .sprite(fallingEnemy.x, fallingEnemy.y, "explosion")
-          .setScale(0.5);
-        this.explosion.play("boom");
-        this.explosion.on("animationcomplete", function () {
-          this.destroy();
-        });
-        enemyExplode.play();
-      }
-    );
+    // this.physics.add.collider(
+    //   playerShip,
+    //   gameState.fallingEnemies,
+    //   (playerShip, fallingEnemy) => {
+    //     playerShip.destroy();
+    //     fallingEnemy.destroy();
+    //     this.explosion = this.add
+    //       .sprite(fallingEnemy.x, fallingEnemy.y, "explosion")
+    //       .setScale(0.5);
+    //     this.explosion.play("boom");
+    //     this.explosion.on("animationcomplete", function () {
+    //       this.destroy();
+    //     });
+    //     enemyExplode.play();
+    //   }
+    // );
 
     this.physics.add.collider(
       gameState.playerLaser,
@@ -194,25 +194,27 @@ class SpaceWars extends Phaser.Scene {
       }
     );
 
-    this.physics.add.collider(
-      playerShip,
-      gameState.fallingEnemies,
-      (playerShip, fallingEnemy) => {
-        playerShip.destroy();
-        fallingEnemy.destroy();
-        this.explosion = this.add
-          .sprite(fallingEnemy.x, fallingEnemy.y, "explosion")
-          .setScale(0.5);
-        this.explosion.play("boom");
-        this.explosion.on("animationcomplete", function () {
-          this.destroy();
-        });
-        enemyExplode.play();
-      }
-    );
+    // this.physics.add.collider(
+    //   playerShip,
+    //   gameState.fallingEnemies,
+    //   (playerShip, fallingEnemy) => {
+    //     playerShip.destroy();
+    //     fallingEnemy.destroy();
+    //     this.explosion = this.add
+    //       .sprite(fallingEnemy.x, fallingEnemy.y, "explosion")
+    //       .setScale(0.5);
+    //     this.explosion.play("boom");
+    //     this.explosion.on("animationcomplete", function () {
+    //       this.destroy();
+    //     });
+    //     enemyExplode.play();
+    //   }
+    // );
 
     gameState.hitScoreText = this.add.text(50, 560, "ENEMIES HIT : 0", {});
-    gameState.scoreText = this.add.text(300, 560, "ENEMIES MISSED : 0", {});
+    gameState.scoreText = this.add.text(315, 560, "ENEMIES MISSED : 0", {});
+    gameState.musicStatus = this.add.text(630, 560, "MUSIC: OFF")
+    
   }
 
   randomFire(world) {
@@ -272,11 +274,13 @@ class SpaceWars extends Phaser.Scene {
         cosmicSound.loop = true;
         cosmicSound.play();
         gameState.playBackgroundSound = true;
+        gameState.musicStatus.setText("MUSIC: ON")
         // setTimeout(() => {gameState.playBackgroundSound = true}, 500)
         console.log("SoundPlaying");
       } else if (gameState.playBackgroundSound) {
         cosmicSound.stop();
         gameState.playBackgroundSound = false;
+        gameState.musicStatus.setText("MUSIC: OFF")
         console.log("Sound Stopped");
       }
     } else {
