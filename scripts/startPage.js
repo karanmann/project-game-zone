@@ -5,7 +5,6 @@ byline.innerHTML = '';														// Empty current content
 
 let span, letter					// Create variables to create elements
 
-
 for(i=0;i<bylineArr.length;i++){									// Loop for every letter
   span = document.createElement("span");					// Create a <span> element
   letter = document.createTextNode(bylineArr[i]);	// Create the letter
