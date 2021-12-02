@@ -12,9 +12,12 @@ let bg,
   enemyShipSound,
   enemyLaserSound,
   playerExplode,
-  enemyExplode;
+  enemyExplode,
+  playerKilled = false,
+  finalHits,
+  finalMiss;
 
-const gameState = {
+let gameState = {
   score: 0,
   lastFired: 0,
   playBackgroundSound: false,
@@ -49,7 +52,15 @@ class SpaceWars extends Phaser.Scene {
   }
 
   create() {
-    
+    gameState = {
+      score: 0,
+      lastFired: 0,
+      playBackgroundSound: false,
+      highScore: 0,
+      hitScore: 0,
+    };
+    playerKilled = false
+    console.log('test')
     bg = this.add.image(400, 300, "background");
     bg.setDisplaySize(800, 600);
     bg = this.add.tileSprite(500, 100, 1024, 1024, "background");
@@ -99,13 +110,14 @@ class SpaceWars extends Phaser.Scene {
         playerExplode.play( )
         this.explosion = this.add.sprite(playerShip.x, playerShip.y, "explosion");
         this.explosion.play("boom");
-        this.explosion.on("animationcomplete", () => { this.scene.restart() });
+        this.explosion.on("animationcomplete", () => { this.scene.pause() });
+        playerKilled = true
       });
       gameState.fallingEnemies.add(enemy);
       }
     
       this.time.addEvent({
-        delay: 600,
+        delay: 600,     // Change to change the difficulty of the game. 600 is the sweet
         callback: enemyGen, // using to call the function enemyGen()
         callbackScope: this,
         loop: true,
@@ -148,6 +160,9 @@ class SpaceWars extends Phaser.Scene {
       enemyLaserSound = this.sound.add("enemyLaserAudio", { volume: 0.1 });
       playerExplode = this.sound.add("playerExplode", { volume: 0.4 });
       enemyExplode = this.sound.add("enemyExplode", { volume: 0.3 });
+
+      finalHits = gameState.hitScore;
+      finalMiss = gameState.score;
     }
 
   randomFire(world) {
@@ -177,19 +192,27 @@ class SpaceWars extends Phaser.Scene {
         playerExplode.play( )
         this.explosion = this.add.sprite(playerShip.x, playerShip.y, "explosion").setScale(1.2);
         this.explosion.play("boom");
-        this.explosion.on("animationcomplete", () => { this.scene.restart() });
+        this.explosion.on("animationcomplete", () => { 
+          this.scene.pause()
+        });
+        playerKilled = true
       })
     }
   }                 
   update() {
 
     bg.tilePositionY -= 1; // THE BACKGROUND IS ROLLING
-
+    console.log('ttt')
     if (fireFrequency > 50) {
       fireFrequency = 0;
       this.randomFire(this.physics);
     } else {
       fireFrequency++;
+    }
+    console.log("finalHits", finalHits, "finalMiss", finalMiss, gameState);
+    if (playerKilled) {
+        cosmicSound.stop();
+        this.scene.start("game-over", gameState);
     }
 
     if (Phaser.Input.Keyboard.JustDown(playerShipControls.space)) {
