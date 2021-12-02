@@ -1,4 +1,5 @@
 import SpaceWars from "./SpaceWars.js";
+import GameOverScene from "./GameOver.js";
 
 var config = {
   type: Phaser.AUTO,
@@ -15,7 +16,12 @@ var config = {
     },
   },
   backgroundColor: "#000",
-  scene: [SpaceWars],
+  scene: [SpaceWars, GameOverScene],
+  render: {
+    pixelArt: true,
+  },
 };
 
 new Phaser.Game(config);
+
+game.scene.start('game')

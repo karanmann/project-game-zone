@@ -12,7 +12,10 @@ let bg,
   enemyShipSound,
   enemyLaserSound,
   playerExplode,
-  enemyExplode;
+  enemyExplode,
+  playerKilled = false,
+  finalHits,
+  finalMiss;
 
 const gameState = {
   score: 0,
@@ -99,13 +102,14 @@ class SpaceWars extends Phaser.Scene {
         playerExplode.play( )
         this.explosion = this.add.sprite(playerShip.x, playerShip.y, "explosion");
         this.explosion.play("boom");
-        this.explosion.on("animationcomplete", () => { this.scene.restart() });
+        this.explosion.on("animationcomplete", () => { this.scene.pause() });
+        playerKilled = true
       });
       gameState.fallingEnemies.add(enemy);
       }
     
       this.time.addEvent({
-        delay: 600,
+        delay: 600,     // Change to change the difficulty of the game. 600 is the sweet
         callback: enemyGen, // using to call the function enemyGen()
         callbackScope: this,
         loop: true,
@@ -148,6 +152,9 @@ class SpaceWars extends Phaser.Scene {
       enemyLaserSound = this.sound.add("enemyLaserAudio", { volume: 0.1 });
       playerExplode = this.sound.add("playerExplode", { volume: 0.4 });
       enemyExplode = this.sound.add("enemyExplode", { volume: 0.3 });
+
+      finalHits = gameState.hitScore;
+      finalMiss = gameState.score;
     }
 
   randomFire(world) {
@@ -177,7 +184,10 @@ class SpaceWars extends Phaser.Scene {
         playerExplode.play( )
         this.explosion = this.add.sprite(playerShip.x, playerShip.y, "explosion").setScale(1.2);
         this.explosion.play("boom");
-        this.explosion.on("animationcomplete", () => { this.scene.restart() });
+        this.explosion.on("animationcomplete", () => { 
+          this.scene.pause()
+        });
+        playerKilled = true
       })
     }
   }                 
@@ -190,6 +200,10 @@ class SpaceWars extends Phaser.Scene {
       this.randomFire(this.physics);
     } else {
       fireFrequency++;
+    }
+
+    if (playerKilled) {
+        this.scene.start('game-over', [finalHits, finalMiss])
     }
 
     if (Phaser.Input.Keyboard.JustDown(playerShipControls.space)) {
