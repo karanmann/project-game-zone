@@ -20,47 +20,16 @@
 
   <div class="container">
    
-    <div class="input">
-        <h2>High Score</h2>
+   
+        <h1>High Score</h1>
 
-    <input class="input" type="text" placeholder="Name" />
-    <input class="input" type="number" placeholder="Score" /><br>
+    <input class="name" type="text" placeholder="Name"/>
+    <input class="name" type="number" placeholder="Score"/><br>
     <input class="save" type="button" onclick="save()" value="save" />
-    </div> 
+   
   </div>
 
-  
-  </a>
-  
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-app.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-  
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyCAU9L0p0giADWSk5xvqXc9iqHJPYuZ770",
-      authDomain: "star-wars-game-da369.firebaseapp.com",
-      databaseURL: "https://star-wars-game-da369-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "star-wars-game-da369",
-      storageBucket: "star-wars-game-da369.appspot.com",
-      messagingSenderId: "117022366330",
-      appId: "1:117022366330:web:b66e7698eb9982805239c3"
-    };
-  
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    var fireBaseref = new firebase("https://star-wars-game-da369-default-rtdb.europe-west1.firebasedatabase.app");
 
-function save (){
-  var newScore = {};
-  newScore.name = document.getElementById("name").value;
-  newScore.score = document.getElementById("score").value;
-  fireBaseref.set(newScore);
-}
-
-  </script>
 </body>
 </html>
 
