@@ -211,6 +211,7 @@ class SpaceWars extends Phaser.Scene {
     }
     console.log("finalHits", finalHits, "finalMiss", finalMiss, gameState);
     if (playerKilled) {
+        cosmicSound.stop();
         this.scene.start("game-over", gameState);
     }
 
