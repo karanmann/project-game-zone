@@ -8,12 +8,13 @@ body {
   flex-direction: column;
   overflow: hidden;
   background-image: url("../assets/background/uhd-g3556c22c3_1920.jpg");
+  background-size: cover;
   height: 100vh;
 }
 
 canvas {
-    box-shadow: 0 0 0.2rem #fff, 0 0 0.2rem #fff, 0 0 2rem #bc13fe,
-    0 0 0.8rem #bc13fe, 0 0 2.8rem #bc13fe, inset 0 0 1.3rem #bc13fe;
+    box-shadow: 0 0 0.2rem #fff, 0 0 0.2rem #fff, 0 0 2rem #0099FF,
+    0 0 0.8rem #0099FF, 0 0 2.8rem #0099FF, inset 0 0 1.3rem #0099FF;
   border: 0.2rem solid #fff;
   border-radius: 2rem;
 }

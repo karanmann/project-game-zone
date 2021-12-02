@@ -90,7 +90,7 @@ class SpaceWars extends Phaser.Scene {
     platform.create(0, 730, "bottom");
     
     playerShip = this.physics.add.sprite(400, 450, "playerShip");
-    playerShip.setScale(0.13);
+    playerShip.setScale(0.1);
     playerShip.setCollideWorldBounds(true); //Stops playerShip from leaving the frame.
 
     playerShipControls = this.input.keyboard.createCursorKeys(); //Gives us access to Arrowkeys + Space + Shift
@@ -105,7 +105,7 @@ class SpaceWars extends Phaser.Scene {
     
     function enemyGen() {
       const XCoord = Math.random() * 600; // Generates random enemyship on the X-axis
-      let enemy = this.physics.add.sprite(XCoord, 0, "enemyShip").setScale(0.4);
+      let enemy = this.physics.add.sprite(XCoord, 0, "enemyShip").setScale(0.3);
       this.physics.add.collider(enemy, playerShip, () => {
         playerExplode.play( )
         this.explosion = this.add.sprite(playerShip.x, playerShip.y, "explosion");
