@@ -23,9 +23,9 @@
     <div class="input">
         <h2>High Score</h2>
 
-    <input type="text" placeholder="Name" />
-    <input type="number" placeholder="Score" /><br>
-    <input type="button" onclick="save()" value="save" />
+    <input class="input" type="text" placeholder="Name" />
+    <input class="input" type="number" placeholder="Score" /><br>
+    <input class="save" type="button" onclick="save()" value="save" />
     </div> 
   </div>
 
@@ -51,8 +51,7 @@
   
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-
-    
+    var fireBaseref = new firebase("https://star-wars-game-da369-default-rtdb.europe-west1.firebasedatabase.app");
 
 function save (){
   var newScore = {};

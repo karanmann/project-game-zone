@@ -61,7 +61,7 @@
   }
 
   
-  Make the 3D work on the container 
+ /* Make the 3D work on the container 
   .starwars-demo {
     perspective: 600px;
    
@@ -79,7 +79,7 @@
   .starwars-demo {
     height: 10em;
     /*left: 50%;*/
-    position: absolute;
+    position: relative;
     top: 10%;
     width: 22em;
   }
@@ -97,7 +97,7 @@
     grid-template-rows: 1fr;
     width:20em;
     height:19em;
-    margin-top:20%;
+    margin-top:10%;
     background-color: rgb(240, 235, 235);
     text-align: center;
     box-shadow: 0 0 0.2rem #fff, 0 0 0.2rem #fff, 0 0 2rem #bc13fe,
@@ -109,7 +109,11 @@
   }
   .input{
       justify-content: center;
+      border-radius: 5px;
+      padding:5px;
       
   }
+
+  
   
   
