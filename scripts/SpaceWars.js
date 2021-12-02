@@ -17,7 +17,7 @@ let bg,
   finalHits,
   finalMiss;
 
-const gameState = {
+let gameState = {
   score: 0,
   lastFired: 0,
   playBackgroundSound: false,
@@ -52,7 +52,15 @@ class SpaceWars extends Phaser.Scene {
   }
 
   create() {
-    
+    gameState = {
+      score: 0,
+      lastFired: 0,
+      playBackgroundSound: false,
+      highScore: 0,
+      hitScore: 0,
+    };
+    playerKilled = false
+    console.log('test')
     bg = this.add.image(400, 300, "background");
     bg.setDisplaySize(800, 600);
     bg = this.add.tileSprite(500, 100, 1024, 1024, "background");
@@ -194,16 +202,16 @@ class SpaceWars extends Phaser.Scene {
   update() {
 
     bg.tilePositionY -= 1; // THE BACKGROUND IS ROLLING
-
+    console.log('ttt')
     if (fireFrequency > 50) {
       fireFrequency = 0;
       this.randomFire(this.physics);
     } else {
       fireFrequency++;
     }
-
+    console.log("finalHits", finalHits, "finalMiss", finalMiss, gameState);
     if (playerKilled) {
-        this.scene.start('game-over', [finalHits, finalMiss])
+        this.scene.start("game-over", gameState);
     }
 
     if (Phaser.Input.Keyboard.JustDown(playerShipControls.space)) {

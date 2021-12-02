@@ -23,5 +23,3 @@ var config = {
 };
 
 new Phaser.Game(config);
-
-game.scene.start('game')
