@@ -7,7 +7,10 @@ let center,
   text,
   platform,
   cosmicSound,
-  cruisingSound;
+  cruisingSound,
+  bullet,
+  bulletTime = 0,
+  fireButton;
 
 const gameState = { score: 0 };
 
@@ -19,8 +22,9 @@ class SpaceWars extends Phaser.Scene {
     this.load.image("enemyShip", "../assets/ships/PodShip.svg");
     this.load.image("background", "../assets/startPage/bg.jpeg");
     this.load.image("bottom", "../assets/background/blackRectangle.svg");
-    this.load.audio("cosmic", "./assets/audio/cosmicGlow.mp3");
-    this.load.audio("cruising", "./assets/audio/shipCruising.mp3");
+    this.load.audio("cosmic", "../assets/audio/cosmicGlow.mp3");
+    this.load.audio("cruising", "../assets/audio/shipCruising.mp3");
+    this.load.image("bullet", "../assets/laser/laserBlue01.png");
   }
 
   create() {
@@ -65,9 +69,21 @@ class SpaceWars extends Phaser.Scene {
     gameState.scoreText = this.add.text(300, 560, "ENEMIES MISSED : 0", {});
     cosmicSound = this.sound.add("cosmic", { volume: 0.2 });
     cruisingSound = this.sound.add("cruising", { volume: 0.2 });
+
+    bullet = this.add.group(); //making the bullets into a group that will be recycled.
+    bullet.enableBody = true; //function that enables physiques to the laser.
+    bullet.physiquesBodyType = Phaser.Physics.ARCADE; //choosing physics type for laser.
+    bullet.createMultiple(30, "bullet")//creating the laser.
+    bullet.setAll(0.5, 0.5);
+    bullet.setAll(1, 1);
+    /*bullet.setAll('outOfBoundsKill', true); //If laser is out of world, reuse it.
+    bullet.setAll('checkWorldBounds', true);//Checks if laser is outside of world.*/
+
+
   }
 
   update() {
+
     if (playerShipControls.space.isDown){
       cosmicSound.play();
     } else if (playerShipControls.left.isDown) {
@@ -82,10 +98,31 @@ class SpaceWars extends Phaser.Scene {
     } else if (playerShipControls.down.isDown) {
       playerShip.setVelocity(0, 400);
       cruisingSound.play(); // Down arrow is pressed
-    } else {
+    }
+      else if (playerShipControls.shift.isDown) {
+        fireBullet()
+      }
+      else {}
+
       playerShip.setVelocity(0, 0); // if nothing is pressed velocity on x & y-axis to 0
     }
+
+  
   }
-}
+
+  function fireBullet(){
+
+    if(game.time.now > bulletTime){
+
+      bullet = bullet.getFirstExists(false);
+
+      if(bullet){
+        bullet.reset(playerShip.x,playerShip.y);//Resets bullets position to playerShiå
+        bullet.body.velocity.y = -400; //enable physiques to bullet.
+        bulletTime = game.time.now + 200;
+      }
+    }
+  }
+
 
 export default SpaceWars; // To export the class component so that it can be accessed in the other JavaScript files.
