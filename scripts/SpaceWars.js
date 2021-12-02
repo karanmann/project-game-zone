@@ -217,7 +217,8 @@ class SpaceWars extends Phaser.Scene {
 
     if (Phaser.Input.Keyboard.JustDown(playerShipControls.space)) {
       gameState.playerLaser
-        .create(playerShip.x, playerShip.y, "playerLaser")
+        .create(playerShip.x, playerShip.y-55, "playerLaser")
+        .setScale(0.7)
         .setGravityY(-1200);
       playerLaserSound.play();
     } else if (Phaser.Input.Keyboard.JustDown(playerShipControls.right)) {
